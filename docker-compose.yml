@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  database:
+    image: mysql:8.0
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - task-manager-app-db-data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker-dev.dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+    env_file:
+      - .env
+    depends_on:
+      - database
+
+volumes:
+  task-manager-app-db-data: {}
