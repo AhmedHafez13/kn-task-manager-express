@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import 'express-async-errors';
 import AppRouter from './routes/app.router';
 import ErrorHandlerMiddleware from './middleware/error-handler.middleware';
+import { AppDataSource } from '../typeorm/data-source';
 
 class Server {
   private app: Express;
@@ -29,8 +30,13 @@ class Server {
   }
 
   private async connectToDatabase(): Promise<boolean> {
-    // TODO: SETUP DATABASE CONNECTION
-    return true;
+    try {
+      await AppDataSource.initialize();
+      return true;
+    } catch (error) {
+      console.error(error);
+    }
+    return false;
   }
 
   private setupLogger(): void {
