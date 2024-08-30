@@ -1,9 +1,11 @@
 import express, { Express } from 'express';
-import morgan from 'morgan';
 import 'express-async-errors';
-import AppRouter from './routes/app.router';
-import ErrorHandlerMiddleware from './middleware/error-handler.middleware';
+import morgan from 'morgan';
+import passport from 'passport';
 import { AppDataSource } from '../typeorm/data-source';
+import ErrorHandlerMiddleware from './middleware/error-handler.middleware';
+import AppRouter from './routes/app.router';
+import JWTStrategy from './passport/jwt.strategy';
 
 class Server {
   private app: Express;
@@ -45,6 +47,7 @@ class Server {
 
   private setupMiddleware(): void {
     this.app.use(express.json());
+    passport.use(JWTStrategy);
   }
 
   private configureRoutes(): void {

@@ -1,4 +1,5 @@
 import { Application, Router } from 'express';
+import AuthMiddleware from '../middleware/auth.middleware';
 import ErrorHandlerMiddleware from '../middleware/error-handler.middleware';
 import AppRoutes from '../routes/app.routes';
 
@@ -19,7 +20,9 @@ export default class AppRouter {
     this.registerPostMiddleware();
   }
 
-  private registerPreMiddleware(): void {}
+  private registerPreMiddleware(): void {
+    this.app.use(AuthMiddleware.authenticate);
+  }
 
   registerAppRouts() {
     for (const Router of AppRoutes) {
