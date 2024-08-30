@@ -32,12 +32,35 @@ class TaskRepository {
   }
 
   /**
+   * Check if a task exists by its ID.
+   * @param {number} taskId - The ID of the task to retrieve.
+   * @returns {Promise<boolean>} The task, or null if it does not exist.
+   */
+  async userTaskExists(userId: number, taskId: number): Promise<boolean> {
+    return this.repository.exists({
+      where: { id: taskId, user: { id: userId } },
+    });
+  }
+
+  /**
    * Retrieves a task by its ID.
    * @param {number} taskId - The ID of the task to retrieve.
    * @returns {Promise<Task | null>} The task, or null if it does not exist.
    */
   async getTask(taskId: number): Promise<Task | null> {
     return this.repository.findOne({ where: { id: taskId } });
+  }
+
+  /**
+   * Retrieves a user task by its ID.
+   * @param {number} userId - The ID of the user (task creator).
+   * @param {number} taskId - The ID of the task to retrieve.
+   * @returns {Promise<Task | null>} The task, or null if it does not exist.
+   */
+  async getUserTask(userId: number, taskId: number): Promise<Task | null> {
+    return this.repository.findOne({
+      where: { id: taskId, user: { id: userId } },
+    });
   }
 
   /**
@@ -73,8 +96,8 @@ class TaskRepository {
    * @param {number} taskId - The ID of the task to mark as completed.
    * @returns {Promise<void>} Resolves when the task has been updated.
    */
-  async markTaskCompleted(taskId: number): Promise<void> {
-    await this.repository.update(taskId, { completed: true });
+  async markTaskCompleted(taskId: number, completed: boolean): Promise<void> {
+    await this.repository.update(taskId, { completed });
   }
 
   /**

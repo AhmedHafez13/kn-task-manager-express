@@ -19,7 +19,7 @@ export class Task {
   title!: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  description!: string;
+  description?: string;
 
   @Column({ type: 'date', nullable: true })
   dueDate!: Date;
