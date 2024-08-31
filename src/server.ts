@@ -2,6 +2,7 @@ import express, { Express } from 'express';
 import 'express-async-errors';
 import morgan from 'morgan';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import { AppDataSource } from '../typeorm/data-source';
 import ErrorHandlerMiddleware from './middleware/error-handler.middleware';
@@ -59,6 +60,7 @@ class Server {
   }
 
   private setupMiddleware(): void {
+    this.app.use(cookieParser());
     this.app.use(express.json());
     passport.use(JWTStrategy);
   }

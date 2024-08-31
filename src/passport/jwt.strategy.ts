@@ -1,11 +1,27 @@
+import { Request } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import userRepository from '../repositories/user.repository';
 import JwtSettings from '../settings/jwt.settings';
 
+const extractFromCookies = function (req: Request) {
+  let token = null;
+
+  const authCookie = req?.cookies?.['Authorization'];
+  if (authCookie) {
+    token = authCookie;
+  }
+
+  if (!token) {
+    return ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+  }
+
+  return token;
+};
+
 const JWTStrategy = new Strategy(
   {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    jwtFromRequest: extractFromCookies,
     secretOrKey: JwtSettings.secretKey,
   },
   async (payload: JwtPayload, done: VerifiedCallback) => {
