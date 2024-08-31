@@ -12,8 +12,6 @@ This backend application is built using Node.js and Express. It serves as the se
   - [Running the Application](#running-the-application)
 - [Project Structure](#project-structure)
 - [API Endpoints](#api-endpoints)
-- [Testing](#testing)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Features
