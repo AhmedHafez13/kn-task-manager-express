@@ -2,7 +2,7 @@ import BaseRouter from '../../routes/base.router';
 import AuthController from './auth.controller';
 
 export default class AuthRoutes extends BaseRouter {
-  protected override base = '/api/auth';
+  protected override base = '/api';
 
   protected override configureRoutes(): void {
     this.router.post('/register', AuthController.register);

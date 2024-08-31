@@ -37,6 +37,19 @@ class AuthController {
 
     const user = await UserRepository.createUser(name, email, hashedPassword);
 
+    const token = AuthService.generateAuthToken({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
+
+    // Set the token as a cookie
+    res.cookie('Authorization', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Send only over HTTPS in production
+      sameSite: 'strict',
+    });
+
     res.status(201).json({
       message: 'User registered successfully',
       user: { name: user.name, email: user.email },
@@ -61,15 +74,23 @@ class AuthController {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const payload = {
+    const token = AuthService.generateAuthToken({
       id: user.id,
       name: user.name,
       email: user.email,
-    };
+    });
 
-    const token = AuthService.generateAuthToken(payload);
+    // Set the token as a cookie
+    res.cookie('Authorization', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Send only over HTTPS in production
+      sameSite: 'strict',
+    });
 
-    res.status(200).json({ message: 'Login successful', token });
+    res.status(201).json({
+      message: 'Login successful',
+      user: { name: user.name, email: user.email },
+    });
   }
 }
 

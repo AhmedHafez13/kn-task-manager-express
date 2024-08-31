@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
 import 'express-async-errors';
 import morgan from 'morgan';
+import cors from 'cors';
 import passport from 'passport';
 import { AppDataSource } from '../typeorm/data-source';
 import ErrorHandlerMiddleware from './middleware/error-handler.middleware';
@@ -21,6 +22,7 @@ class Server {
       process.exit();
     }
 
+    this.configureCORS();
     this.setupLogger();
     this.setupMiddleware();
     this.configureRoutes();
@@ -39,6 +41,17 @@ class Server {
       console.error(error);
     }
     return false;
+  }
+
+  private configureCORS(): void {
+    const corsOptions: cors.CorsOptions = {
+      origin: process.env.ALLOWED_ORIGINS?.split(',') || [
+        'http://localhost:3000',
+      ],
+      credentials: true,
+    };
+
+    this.app.use(cors(corsOptions));
   }
 
   private setupLogger(): void {
